@@ -1,0 +1,44 @@
+#include <gtest/gtest.h>
+
+#define main dont_use_main
+#include "lab103.cpp"
+#undef main
+
+TEST(SortTest, SortByPhone) {
+  Note arr[3] = {{"Ivanov", "Ivan", "555", {1, 1, 1990}},
+                 {"Petrov", "Petr", "111", {2, 2, 1991}},
+                 {"Sidorov", "Sidor", "333", {3, 3, 1992}}};
+
+  sortByPhone(arr, 3);
+
+  EXPECT_EQ(arr[0].phone, "111");
+  EXPECT_EQ(arr[1].phone, "333");
+  EXPECT_EQ(arr[2].phone, "555");
+}
+
+TEST(FindTest, FindBySurname) {
+  Note arr[3] = {{"Ivanov", "Ivan", "555", {1, 1, 1990}},
+                 {"Petrov", "Petr", "111", {2, 2, 1991}},
+                 {"Sidorov", "Sidor", "333", {3, 3, 1992}}};
+
+  EXPECT_EQ(findBySurname(arr, 3, "Petrov"), 1);
+  EXPECT_EQ(findBySurname(arr, 3, "NotExist"), -1);
+}
+
+TEST(SaveLoadFile, SaveAndLoad) {
+  Note arr[2] = {{"Ivanov", "Ivan", "123", {1, 1, 1990}},
+                 {"Petrov", "Petr", "456", {2, 2, 1991}}};
+
+  saveToFile("testfile.txt", arr, 2);
+
+  Note *loaded = nullptr;
+  int n = 0;
+
+  ASSERT_TRUE(loadFromFile("testfile.txt", loaded, n));
+  ASSERT_EQ(n, 2);
+
+  EXPECT_EQ(loaded[0].surname, "Ivanov");
+  EXPECT_EQ(loaded[1].phone, "456");
+
+  delete[] loaded;
+}
